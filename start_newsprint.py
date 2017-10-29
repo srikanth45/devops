@@ -135,7 +135,6 @@ def updateContent(filePath, branchName, encodedString):
         print sha
         print encodedString      
         put_data = { "branch": branchName, "content": encodedString, "message": commit_message, "sha": sha, "committer": { "name": "MANOHAR452", "email": "a.manohar452@gmail.com"}}
-        print put_data
         r = requests.put(giturl + filePath + '?ref=' + branchName, data=json.dumps(put_data), auth=(username, password))
         if (r.status_code == 200):
             print 'Successfully updated version in ' + filePath
