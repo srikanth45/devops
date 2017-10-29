@@ -1,3 +1,4 @@
+
 import datetime
 
 now = datetime.datetime.now()
@@ -17,5 +18,7 @@ print "Current second: %d" % now.second
 print "Current microsecond: %d" % now.microsecond
 
 print
+print
 print "Current date and time using strftime:"
 print now.strftime("%Y-%m-%d %H:%M")
+print "This program works awesome"
