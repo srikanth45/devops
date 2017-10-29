@@ -15,15 +15,15 @@ import os
 #########################
 #To get the current sprint version
 #config values
-AUTH_TOKEN = "token 1d726f6163785e6e7bd6c7205d1c1a806a73ace6"
-giturl = "https://api.github.com/repos/devops/"
+#AUTH_TOKEN = "token 1d726f6163785e6e7bd6c7205d1c1a806a73ace6"
+giturl = "https://api.github.com/repos/MANOHAR452/devops/"
 commit_message = "Automated commit to update sprint version at the beginning of sprint"
-xpc_version_file = "devops/contents/sprint_version.txt?ref=master"
+xpc_version_file = "contents/sprint_version.txt?ref=master"
 sha = None
 
 def getContent(filePath):
     try:
-        r = requests.get(str(giturl) + str(filePath), headers={'Authorization': AUTH_TOKEN})
+        r = requests.get(str(giturl) + str(filePath))
         global sha
         sha = r.json()['sha']
         decodedString = base64.b64decode(r.json()['content'])
@@ -37,12 +37,13 @@ def getContent(filePath):
 
 #logging.basicConfig(level=logging.DEBUG)
 
-USER = '/MANOHAR452'
-HEADER = {"Authorization": "bearer 1d726f6163785e6e7bd6c7205d1c1a806a73ace6"}
+username = "MANOHAR452"
+password = "xxxxxxxxxx"
+#HEADER = {"Authorization": "bearer 1d726f6163785e6e7bd6c7205d1c1a806a73ace6"}
 
 
 
-API_PATH = "https://api.github.com/api/v3/repos"
+API_PATH = "https://api.github.com/repos/MANOHAR452"
 
 
 
@@ -53,7 +54,7 @@ def get_sha_of_branch(branch, user_repo):
     '''
     logging.debug('branch: %s user_repo: %s' % (branch, user_repo))
     url = API_PATH + user_repo + "/git/refs/heads/" + branch
-    r = requests.get(url, headers=HEADER)
+    r = requests.get(url)
     try:
         j = r.json()
         logging.debug(j)
@@ -76,7 +77,7 @@ def create_branch_from_branch(target, base, user_repo):
             "sha": sha
             }
     try:
-        r = requests.post(url, data=json.dumps(data), headers=HEADER)
+        r = requests.post(url, data=json.dumps(data), auth=(username, password))
         j = r.json()
         if 'message' in j:
             message = j["message"]
@@ -103,7 +104,7 @@ def merge_branch_to_branch(user_repo, master, branch, message):
             }
     url = API_PATH + user_repo + "/merges"
     try:
-        r = requests.post(url, data=json.dumps(data), headers=HEADER)
+        r = requests.post(url, data=json.dumps(data), auth=(username, password))
         if r.status_code == 204:
             print "No change for merging", master, 'into', branch
             return
@@ -119,7 +120,7 @@ def merge_branch_to_branch(user_repo, master, branch, message):
         sys.exit(1)
 
 def get_it_done(repo):
-    user_repo = USER + repo
+    user_repo = repo
     version = get_xpc_version_of_branch('developn-1', user_repo)
     create_branch_from_branch(version, 'developn-1', user_repo)
     merge_branch_to_branch(user_repo, 'develop', 'developn-1', 'End of sprint merge')    
@@ -132,8 +133,10 @@ def get_it_done(repo):
 def updateContent(filePath, branchName, encodedString):
     try:
         print sha
-        put_data = { "branch": branchName, "content": encodedString, "message": commit_message, "sha": sha, "committer": { "name": "xpcgithub", "email": "xpcgithub@cable.comcast.com"}}
-        r = requests.put(giturl + filePath + '?ref=' + branchName, data=json.dumps(put_data), headers={'Authorization': AUTH_TOKEN})
+        print encodedString      
+        put_data = { "branch": branchName, "content": encodedString, "message": commit_message, "sha": sha, "committer": { "name": "MANOHAR452", "email": "a.manohar452@gmail.com"}}
+        print put_data
+        r = requests.put(giturl + filePath + '?ref=' + branchName, data=json.dumps(put_data), auth=(username, password))
         if (r.status_code == 200):
             print 'Successfully updated version in ' + filePath
         else:
@@ -183,7 +186,7 @@ if __name__ == '__main__':
     print ('working on /devops')
     get_it_done('/devops')
     print ('working on sprint_version.txt file update')
-    file_content = getContent(version_file)
+    file_content = getContent(xpc_version_file)
     previousVersion = file_content.split('current_sprint =')[1].split("'")[1]
     version_N_1 = file_content.split('previous_sprint =')[1].split("'")[1]
     newVersion = findNewVersion(previousVersion)
