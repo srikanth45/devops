@@ -132,8 +132,7 @@ def get_it_done(repo):
 #function to update file with given String on git branch
 def updateContent(filePath, branchName, encodedString):
     try:
-        print sha
-        print encodedString      
+        print sha    
         put_data = { "branch": branchName, "content": encodedString, "message": commit_message, "sha": sha, "committer": { "name": "MANOHAR452", "email": "a.manohar452@gmail.com"}}
         r = requests.put(giturl + filePath + '?ref=' + branchName, data=json.dumps(put_data), auth=(username, password))
         if (r.status_code == 200):
