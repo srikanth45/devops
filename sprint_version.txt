@@ -1,2 +1,2 @@
-current_sprint = '17.10.5'
-previous_sprint = '17.10.4'
+current_sprint = '17.10.6'
+previous_sprint = '17.10.5'
